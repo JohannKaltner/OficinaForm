@@ -1,39 +1,38 @@
-import React, { Component } from 'react';
-import { ThemeProvider } from '@material-ui/styles';
-import { createMuiTheme } from '@material-ui/core/styles'
-import './App.css';
-import Routes from './routes'
-import { blue, indigo } from '@material-ui/core/colors'
-
+import React, { Component, useEffect } from "react";
+import { ThemeProvider } from "@material-ui/styles";
+import { createMuiTheme } from "@material-ui/core/styles";
+import "./App.css";
+import Routes from "./routes";
+import { blue, green, warning, indigo } from "@material-ui/core/colors";
+import { Provider } from "react-redux";
+import { Armazenado } from "./services/redux/store";
+import { Handle_Action } from "./services/redux/actions/action_types";
+import ModalOficinaSelect from "./components/common/ModalSelectOficina";
 const theme = createMuiTheme({
   palette: {
     secondary: {
-      main: blue[900]
+      main: green[500],
     },
     primary: {
-      main: indigo[700]
-    }
+      main: green[700],
+    },
   },
   typography: {
     // Use the system font instead of the default Roboto font.
-    fontFamily: [
-      '"Lato"',
-      'sans-serif'
-    ].join(',')
-  }
+    fontFamily: ['"Lato"', "sans-serif"].join(","),
+  },
 });
 
-
-class App extends Component {
-  render() {
-    return (
-      <div>
+function App() {
+  return (
+    <div>
+      <Provider store={Armazenado}>
         <ThemeProvider theme={theme}>
           <Routes />
         </ThemeProvider>
-      </div>
-    );
-  }
+      </Provider>
+    </div>
+  );
 }
 
 export default App;

@@ -16,29 +16,30 @@ import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 import { Link as MaterialLink } from "@material-ui/core";
 import Menu from "./Menu";
 
-const logo = require("../images/logo.svg");
+const logo = require("../images/NearGarage.png");
 
-const styles = theme => ({
+const styles = (theme) => ({
   appBar: {
     position: "relative",
     boxShadow: "none",
     borderBottom: `1px solid ${theme.palette.grey["100"]}`,
-    backgroundColor: "white"
+    backgroundColor: "rgb(47 174 105)",
+    color: "white",
   },
   inline: {
-    display: "inline"
+    display: "inline",
   },
   flex: {
     display: "flex",
     [theme.breakpoints.down("sm")]: {
       display: "flex",
       justifyContent: "space-evenly",
-      alignItems: "center"
-    }
+      alignItems: "center",
+    },
   },
   link: {
     textDecoration: "none",
-    color: "inherit"
+    color: "inherit",
   },
   productLogo: {
     display: "inline-block",
@@ -46,53 +47,53 @@ const styles = theme => ({
     marginLeft: 32,
     paddingLeft: 24,
     [theme.breakpoints.up("md")]: {
-      paddingTop: "1.5em"
-    }
+      paddingTop: "1.5em",
+    },
   },
   tagline: {
     display: "inline-block",
     marginLeft: 10,
     [theme.breakpoints.up("md")]: {
-      paddingTop: "0.8em"
-    }
+      paddingTop: "0.8em",
+    },
   },
   iconContainer: {
     display: "none",
     [theme.breakpoints.down("sm")]: {
-      display: "block"
-    }
+      display: "block",
+    },
   },
   iconButton: {
-    float: "right"
+    float: "right",
   },
   tabContainer: {
     marginLeft: 32,
     [theme.breakpoints.down("sm")]: {
-      display: "none"
-    }
+      display: "none",
+    },
   },
   tabItem: {
     paddingTop: 20,
     paddingBottom: 20,
-    minWidth: "auto"
-  }
+    minWidth: "auto",
+  },
 });
 
 class Topbar extends Component {
   state = {
     value: 0,
-    menuDrawer: false
+    menuDrawer: false,
   };
 
   handleChange = (event, value) => {
     this.setState({ value });
   };
 
-  mobileMenuOpen = event => {
+  mobileMenuOpen = (event) => {
     this.setState({ menuDrawer: true });
   };
 
-  mobileMenuClose = event => {
+  mobileMenuClose = (event) => {
     this.setState({ menuDrawer: false });
   };
 
@@ -104,10 +105,10 @@ class Topbar extends Component {
     if (this.props.currentPath === "/home") {
       return 0;
     }
-    if (this.props.currentPath === "/dashboard") {
+    if (this.props.currentPath === "/painel") {
       return 1;
     }
-    if (this.props.currentPath === "/signup") {
+    if (this.props.currentPath === "/perfil") {
       return 2;
     }
     if (this.props.currentPath === "/wizard") {
@@ -122,41 +123,41 @@ class Topbar extends Component {
     const { classes } = this.props;
 
     return (
-      <AppBar position="absolute" color="default" className={classes.appBar}>
+      <AppBar position='absolute' color='default' className={classes.appBar}>
         <Toolbar>
-          <Grid container spacing={10} alignItems="baseline">
+          <Grid container spacing={10} alignItems='baseline'>
             <Grid item xs={12} className={classes.flex}>
               <div className={classes.inline}>
-                <Typography variant="h6" color="inherit" noWrap>
-                  <Link to="/" className={classes.link}>
-                    <img width={20} src={logo} alt="" />
-                    <span className={classes.tagline}>Material Sense</span>
+                <Typography variant='h6' color='inherit' noWrap>
+                  <Link to='/' className={classes.link}>
+                    <img width={20} src={logo} alt='' />
+                    <span className={classes.tagline}>Radar de Oficinas</span>
                   </Link>
                 </Typography>
               </div>
               {!this.props.noTabs && (
                 <React.Fragment>
                   <div className={classes.productLogo}>
-                    <Typography>A material UI Template</Typography>
+                    <Typography>Acesso de Oficinas</Typography>
                   </div>
                   <div className={classes.iconContainer}>
                     <IconButton
                       onClick={this.mobileMenuOpen}
                       className={classes.iconButton}
-                      color="inherit"
-                      aria-label="Menu"
+                      color='inherit'
+                      aria-label='Menu'
                     >
                       <MenuIcon />
                     </IconButton>
                   </div>
                   <div className={classes.tabContainer}>
                     <SwipeableDrawer
-                      anchor="right"
+                      anchor='right'
                       open={this.state.menuDrawer}
                       onClose={this.mobileMenuClose}
                       onOpen={this.mobileMenuOpen}
                     >
-                      <AppBar title="Menu" />
+                      <AppBar title='Menu' />
                       <List>
                         {Menu.map((item, index) => (
                           <ListItem
@@ -167,7 +168,7 @@ class Topbar extends Component {
                                 ? null
                                 : {
                                     pathname: item.pathname,
-                                    search: this.props.location.search
+                                    search: this.props.location.search,
                                   }
                             }
                             button
@@ -180,8 +181,8 @@ class Topbar extends Component {
                     </SwipeableDrawer>
                     <Tabs
                       value={this.current() || this.state.value}
-                      indicatorColor="primary"
-                      textColor="primary"
+                      indicatorColor='tertiary'
+                      textColor='white'
                       onChange={this.handleChange}
                     >
                       {Menu.map((item, index) => (
@@ -194,7 +195,7 @@ class Topbar extends Component {
                               ? null
                               : {
                                   pathname: item.pathname,
-                                  search: this.props.location.search
+                                  search: this.props.location.search,
                                 }
                           }
                           classes={{ root: classes.tabItem }}
