@@ -1,0 +1,48 @@
+.mapContainer {
+  height: 50vw;
+  width: 50vw;
+  z-index: 9;
+}
+
+.react-geocoder {
+  padding-top: 20px;
+  width: 195px;
+}
+.react-geocoder input {
+  width: 100%;
+  height: 30px;
+}
+
+.react-geocoder-results {
+  position: absolute;
+  z-index: 1;
+  width: 300px;
+  background-color: white;
+}
+.react-geocoder-item {
+  z-index: initial;
+  padding-top: 20px;
+  text-align: left;
+  color: rgb(47 174 105);
+  background-color: "#fff";
+
+  font-size: 15px;
+}
+
+.react-geocoder-item:hover {
+  animation: example 1s ease-in-out forwards;
+  background-color: "#fff";
+  padding: 15px;
+  margin-top: 15px;
+  margin-bottom: 10px;
+  border: 1px solid;
+  border-radius: 10px;
+  cursor: pointer;
+  -webkit-box-shadow: 3px 10px 32px -6px rgba(0, 0, 0, 0.44);
+  -moz-box-shadow: 3px 10px 32px -6px rgba(0, 0, 0, 0.44);
+  box-shadow: 3px 10px 32px -6px rgba(0, 0, 0, 0.44);
+  -webkit-transform: scale(1.1);
+  -ms-transform: scale(1.1);
+  transform: scale(1.1);
+  transition: all 0.3s;
+}

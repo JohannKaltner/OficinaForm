@@ -1,10 +1,9 @@
 import React from "react";
-import { Armazenado } from "../redux/store";
+import Armazenado from "../redux/store";
 import api from "./index";
 import { Redirect, Route } from "react-router";
 import { createBrowserHistory } from "history";
 
-const browserHistory = createBrowserHistory();
 export function Login(credentials) {
   api
     .post(
@@ -24,6 +23,7 @@ export function Login(credentials) {
       localStorage.setItem("user_id", response.data.usuario.id);
       localStorage.setItem("user_nome", response.data.usuario.primeiro_nome);
       localStorage.setItem("user_email", response.data.usuario.email);
+      localStorage.setItem("has_oficina", response.data.usuario.hasOficina);
       localStorage.setItem("logado", true);
       window.location.href = "painel";
     })

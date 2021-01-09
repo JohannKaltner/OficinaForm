@@ -1,16 +1,22 @@
-const Menu = [
+export const Menu = [
   {
     label: "Inicio",
     pathname: "/",
   },
   {
-    label: "Painel de Controle",
-    pathname: "/painel",
+    label: "Oficinas",
+    pathname: "/map",
   },
+
   {
     label: "Perfil",
     pathname: "/perfil",
   },
 ];
 
-export default Menu;
+export const PrivateMenu = [
+  {
+    label: "Painel de Controle",
+    pathname: "/painel",
+  },
+];

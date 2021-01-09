@@ -15,12 +15,16 @@ import {
   StepLabel,
   Stepper,
 } from "@material-ui/core";
+import MuiAlert from "@material-ui/lab/Alert";
+
 import SectionHeader from "../typo/SectionHeader";
 // import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import DriveEtaIcon from "@material-ui/icons/DriveEta";
 import AccountBoxIcon from "@material-ui/icons/AccountBox";
 import LoopIcon from "@material-ui/icons/Loop";
 import api from "../../services/Api";
+import Snack from "../common/SnackBar";
+import Alert from "@material-ui/lab/Alert";
 
 const styles = (theme) => ({
   paper: {
@@ -80,7 +84,9 @@ const styles = (theme) => ({
 });
 
 class CardItem extends Component {
-  state = {};
+  state = {
+    open: false,
+  };
   getSteps() {
     return [
       "Aguardando Confirmação",
@@ -90,12 +96,33 @@ class CardItem extends Component {
     ];
   }
 
+  getLabels(situacao) {
+    switch (situacao) {
+      case 0:
+        return "Confirmar Agendamento";
+      case 1:
+        return "Finalizar Agendamento";
+      case 2:
+        return "Realizar Entrega";
+      case 3:
+        return "Confirmar Entrega";
+      case 4:
+        return "Agendamento Finalizado.";
+      default:
+        return "Aguarde...";
+    }
+  }
+
   render() {
     const steps = this.getSteps();
     const { classes } = this.props;
     const { Agendamento } = this.props;
 
     const { criadoEm, preco, id, atualizadoEm, situacao } = Agendamento[0];
+
+    let isOpen = false;
+    const Label = this.getLabels(situacao);
+
     const {
       primeiro_nome_usuario,
       rua_usuario,
@@ -110,7 +137,7 @@ class CardItem extends Component {
       ano_veiculo,
       tipo_combustivel,
     } = Agendamento[0].veiculo;
-
+ 
     const HandleAction = () => {
       const idAgendamento = id;
       const NovaSituacao = situacao + 1;
@@ -120,8 +147,15 @@ class CardItem extends Component {
             situacao: NovaSituacao,
             id: idAgendamento,
           })
-          .then((response) => {
-            console.log(response.data);
+          .then(() => {
+            this.setState({
+              isOpen: true,
+            });
+          })
+          .then(() => {
+            setTimeout(() => {
+              window.location.reload();
+            }, 3000);
           })
           .catch((err) => {
             console.log(err);
@@ -134,8 +168,16 @@ class CardItem extends Component {
     return (
       <div className={classes.root}>
         {/* Section de Stepper */}
+        <MuiAlert
+          elevation={6}
+          variant='filled'
+          style={{ display: situacao === 4 ? "flex" : "none" }}
+        >
+          Esse Agendamento já foi finalizado!
+        </MuiAlert>
+
         <Paper className={classes.paper} elevation={3}>
-          <div style={{ marginTop: 30 }}>
+          <div style={{ marginTop: 30, marginBottom: 30 }}>
             <div className={classes.itemContainer}>
               <div className={classes.avatarContainer}>
                 <Avatar className={classes.avatar}>
@@ -152,7 +194,7 @@ class CardItem extends Component {
                     Status do Agendamento
                   </Typography>
                   <Stepper
-                    activeStep={Agendamento.situacao}
+                    activeStep={situacao}
                     alternativeLabel
                     style={{ width: "140%" }}
                   >
@@ -162,16 +204,22 @@ class CardItem extends Component {
                       </Step>
                     ))}
                   </Stepper>
-                  <Button
-                    color='primary'
-                    variant='contained'
-                    style={{ float: "right" }}
-                    // className={classes.actionButtom}
-                  >
-                    Exibir
-                  </Button>
                 </div>
               </div>
+            </div>
+            <div
+              style={{
+                float: "right",
+              }}
+            >
+              <Button
+                color='primary'
+                disabled={situacao === 4}
+                onClick={() => HandleAction()}
+                variant='contained'
+              >
+                {Label}
+              </Button>
             </div>
           </div>
         </Paper>
@@ -272,6 +320,8 @@ class CardItem extends Component {
             </div>
           </div>
         </Paper>
+
+        <Snack open={isOpen} />
       </div>
     );
   }

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import withStyles from "@material-ui/styles/withStyles";
-import { withRouter } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
@@ -8,21 +8,30 @@ import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import Topbar from "./Topbar";
 import { useSelector } from "react-redux";
-import { Armazenado } from "../services/redux/store";
+import Armazenado from "../services/redux/store";
 import { HANDLE_ACTION } from "../services/redux/actions/action_types";
 import ModalOficinaSelect from "./common/ModalSelectOficina";
 import api from "../services/Api";
 import CardItemNovo from "./cards/CardItemNovo";
+import "./Main.css";
+import {
+  getAgendamentoPorSituacao,
+  GetAgendamentos,
+} from "../services/functions/requests";
+import Smartphone from "./common/smartphone";
+import { Slide, Snackbar } from "@material-ui/core";
+const logo = require("../images/background.jpg");
 
 const styles = (theme) => ({
   root: {
+    height: "100vh",
     flexGrow: 1,
-    backgroundColor: theme.palette.grey["100"],
+    // backgroundColor: "white",
     overflow: "hidden",
-    // background: `url(${backgroundShape}) no-repeat`,
-    // backgroundSize: "cover",
-    backgroundPosition: "0 400px",
-    paddingBottom: 150,
+    // backgroundImage: `url(${logo}) no-repeat`,
+    backgroundSize: "cover",
+    backgroundPosition: "center",
+    backgroundAttachment: "fixed",
   },
   grid: {
     width: 1200,
@@ -93,122 +102,82 @@ const styles = (theme) => ({
 
 function Main(props) {
   const { classes } = props;
-  const [Agendamentos, setAgendamentos] = useState([]);
   const [hasLoaded, setHasLoaded] = useState(false);
-  const ShowModal = !hasLoaded && localStorage.getItem("id_oficina") === null;
-  // const estado = useSelector((state) => state);
+  const ShowModal =
+    hasLoaded === true &&
+    localStorage.getItem("id_oficina") === null &&
+    localStorage.getItem("has_oficina") === 1; 
+  const estado = useSelector((state) => state);
+  const Agendamentos = estado.agendamentoState.Agendamentos;
+  const background = require("../images/background.jpg");
+
+  
 
   useEffect(() => {
     HasNewBooking(true);
-    const interval = setInterval(() => HasNewBooking(1), 30000);
+    const interval = setInterval(() => HasNewBooking(true), 30000);
     return () => {
       clearInterval(interval);
     };
   }, []);
-
-  const HasNewBooking = (isFirstLoad, SituacaoDiferente) => {
+   const HasNewBooking = async (isFirstLoad, SituacaoDiferente) => {
     try {
-      const getSituacao = function () {
-        if (isFirstLoad === true) {
-          console.log("Primeiro Carregamento");
-          return "0";
-        } else if (SituacaoDiferente) {
-          console.log("Situacao diferente");
-          return SituacaoDiferente;
-        }
-      };
-      const situacao = getSituacao();
-      const id = localStorage.getItem("id_oficina");
-      api
-        .post("/agendamentos/SearchAgendamento/", {
-          id: id,
-          situacao: situacao,
-        })
-        .then((response) => {
-          const Arranjo = [];
-          const { agendamento, quantidade } = response.data;
-          for (let i = 0; i < quantidade; i++) {
-            const Data = agendamento[i];
-            Arranjo.push(Data);
-            console.log(Arranjo);
-          }
-          setAgendamentos(Arranjo);
-        })
-        .then(() => {
-          setTimeout(() => {
-            setHasLoaded(true);
-            console.log(Agendamentos);
-          }, 2000);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+      if (localStorage.getItem("has_oficina") == 0) {
+        return null;
+      } else {
+        const situacao = getSituacao(isFirstLoad, SituacaoDiferente);
+        const id = localStorage.getItem("id_oficina");
+        await getAgendamentoPorSituacao(id, situacao);
+        setTimeout(() => {
+          setHasLoaded(true);
+          console.log(Agendamentos);
+        }, 2000);
+      }
     } catch {
-      console.log("Erro");
+      console.log("erro");
     }
-    //  //
-    //   setTimeout(() => {
-    //     console.log();
-    //     console.log("Salvando...");
-    //     // setHasLoaded(true);
-    //     console.log(Agendamentos);
-    //   }, 2000);
+  };
+  const getSituacao = function (isFirstLoad, SituacaoDiferente) {
+    if (isFirstLoad === true) {
+    
+      return "0";
+    } else if (SituacaoDiferente) { 
+      return SituacaoDiferente;
+    }
   };
 
-  const HasActiveBooking = () => {};
-
-  // const GetNewBookings = () => {
-  //   GetAgendamentos()
-  // }
-
-  // let id_oficina = localStorage.getItem("id_oficina");
-  // api
-  //   .get("/agendamentos/PorOficina/" + id_oficina + "?page=" + Page)
-  //   .then(async (response) => {
-  //     const { agendamento, quantidade } = response.data;
-  //     console.log(
-  //       "Dados de retorno, quantidade de dados: " + agendamento.length
-  //     );
-  // for (let i = 0; i < agendamento.length; i++) {
-  // const Data = agendamento[1];
-  // console.log("Gravando o " + 1 + " ", Data);
-  // Agendamentos.push(Data);
-  //  Armazenado.dispatch({
-  //   type: Handle_Get_Bookings,
-  //   Agendamentos: Data,
-  //   ShowNewAgendamento: true,
-  //   Quantidade: quantidade,
-  // });
-  //  }
-  //   console.log(Agendamentos);
-  //   setHasLoaded(true);
-  // })
-  // .catch((err) => {
-  //   console.log(err);
-  // });
-  // }
-  // let id = localStorage.getItem("id_oficina");
-  // if (id === null) {
-
-  //}
   return (
-    <div className={classes.root}>
+    <div
+      className={classes.root}
+      style={{
+        backgroundImage: "url(" + background + " )",
+      }}
+    >
       <CssBaseline />
       <Topbar />
       <div>
-        <Grid container justify='center'>
-          <Grid
-            spacing={4}
-            alignItems='center'
-            justify='center'
-            container
-            className={classes.grid}
-          >
+        <Grid
+          spacing={4}
+          alignItems='center'
+          justify='center'
+          container
+          className={classes.grid}
+        >
+          <Grid container justify='center' style={{textAlign:'center',marginLeft:60}}>
+            <Typography className={"MuiTypography--subheading"} variant={"h6"}>
+              Tá com problemas?
+              <br />
+              Veio ao lugar certo!
+              <br />
+              {/* <Button size='large' variant='contained' color='primary'>
+                Começar
+              </Button> */}
+            </Typography>
             {hasLoaded === false ? (
               <div></div>
             ) : (
               <Grid container item xs={12}>
-                {Agendamentos.map((agendamento, i) => {
+                {[Agendamentos].map((agendamento, i) => {
                   return (
                     <Grid item xs={12} key={i} alignItems='center'>
                       <div
@@ -217,9 +186,39 @@ function Main(props) {
                           justifyContent: "center",
                         }}
                       >
-                        <div className={classes.box} key={i}>
-                          <CardItemNovo agendamento={agendamento} />
-                          <div style={{ marginTop: 30 }}></div>
+                        <div
+                          style={{
+                            display: "flex",
+                            float: "right",
+                            marginTop: 100,
+                          }}
+                        >
+                          <Snackbar
+                            style={{ backgroundColor: "white", marginTop: 50 }}
+                            open={true}
+                            anchorOrigin={{
+                              vertical: "top",
+                              horizontal: "right",
+                            }}
+                            // onClose={handleClose}
+                            // TransitionComponent={<Slide direction='up' />}
+                            // message={
+                            // <div className={classes.box} key={i}>
+
+                            // <div style={{ marginTop: 30 }}></div>
+                            // </div>
+                            // }
+                            // key={transition ? transition.name : ''}
+                          >
+                            <div
+                              style={{
+                                borderRadius: 10,
+                                border: `1px solid lightgrey`,
+                              }}
+                            >
+                              <CardItemNovo agendamento={agendamento} />
+                            </div>
+                          </Snackbar>
                         </div>
                       </div>
                     </Grid>
@@ -228,7 +227,7 @@ function Main(props) {
               </Grid>
             )}
 
-            <Grid item xs={12} md={6}>
+            {/* <Grid item xs={12} md={6}>
               <Paper className={classes.paper}>
                 <div className={classes.box}>
                   <Typography
@@ -244,6 +243,8 @@ function Main(props) {
                 </div>
                 <div style={{ display: "flex", justifyContent: "flex-end" }}>
                   <Button
+                    component={Link}
+                    to={{ pathname: "/painel" }}
                     color='primary'
                     variant='contained'
                     className={classes.actionButtom}
@@ -269,6 +270,8 @@ function Main(props) {
                 </div>
                 <div style={{ display: "flex", justifyContent: "flex-end" }}>
                   <Button
+                    component={Link}
+                    to={{ pathname: "/agendamentos" }}
                     color='primary'
                     variant='contained'
                     className={classes.actionButtom}
@@ -277,8 +280,14 @@ function Main(props) {
                   </Button>
                 </div>
               </Paper>
-            </Grid>
+            </Grid> */}
           </Grid>
+          {/* <Grid container justify='flex-end' style={{ marginRight: 70 }}>
+            <Paper>
+              
+            </Paper>
+            <Smartphone />
+          </Grid> */}
         </Grid>
       </div>
       <ModalOficinaSelect open={ShowModal} />

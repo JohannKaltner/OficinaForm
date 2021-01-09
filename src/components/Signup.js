@@ -81,8 +81,7 @@ const styles = (theme) => ({
 class SignUp extends Component {
   componentDidMount() {
     const logged = localStorage.getItem("logado");
-    console.log(logged);
-  }
+   }
   render() {
     const { classes } = this.props;
     const currentPath = this.props.location.pathname;

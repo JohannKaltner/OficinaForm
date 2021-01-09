@@ -7,6 +7,8 @@ import CardItem from "../cards/CardItem";
 import SectionHeader from "../typo/SectionHeader";
 import { Button, List, ListItem, Typography } from "@material-ui/core";
 import api from "../../services/Api";
+import Snack from "../common/SnackBar";
+import { Link } from "react-router-dom";
 const styles = (theme) => ({
   root: {
     flexGrow: 1,
@@ -36,8 +38,7 @@ class OficinaDetail extends Component {
     window.location.href = "login";
   }
   componentDidMount() {
-    console.log(this.props.match.params);
-    api
+     api
       .get("agendamentos/PorId/" + this.props.match.params.id)
       .then((response) => {
         const { agendamentos } = response.data;
@@ -94,7 +95,11 @@ class OficinaDetail extends Component {
                 >
                   <Grid item xs={12}>
                     <Button variant='text' color='warning'>
-                      <Typography>Cancelar</Typography>
+                      <Typography>
+                        <Link style={{ color: "inherit" }} to='/'>
+                          Voltar
+                        </Link>
+                      </Typography>
                     </Button>
                   </Grid>
                 </Grid>

@@ -14,7 +14,7 @@ import {
   LinearProgress,
 } from "@material-ui/core";
 import { fetchOficinaPorId } from "../../services/functions/requests";
-import { Armazenado } from "../../services/redux/store";
+import Armazenado from "../../services/redux/store";
 import { HANDLE_ACTION } from "../../services/redux/actions/action_types";
 
 export default function ModalOficinaSelect(props) {

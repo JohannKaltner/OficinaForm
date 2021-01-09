@@ -1,88 +1,87 @@
-import React, { Component } from "react";
+import React, { Component, useEffect, useState } from "react";
 import withStyles from "@material-ui/styles/withStyles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Grid from "@material-ui/core/Grid";
 import Topbar from "../Topbar";
-import CardItem from "../cards/CardItem";
-import SectionHeader from "../typo/SectionHeader";
-import { Button, List, ListItem, Typography } from "@material-ui/core";
-const styles = (theme) => ({
-  root: {
-    flexGrow: 1,
-    backgroundColor: theme.palette.grey["A500"],
-    overflow: "hidden",
-    backgroundPosition: "0 400px",
-    marginTop: 20,
-    padding: 20,
-    paddingBottom: 200,
-  },
-  grid: {
-    width: 1000,
-  },
-});
+import { Paper, Button, DialogActions, Divider, Grow, Slide} from "@material-ui/core";
+import AccountInfo from "./submenus/accountInfo";
+import { useSelector } from "react-redux";
+import Fade from "@material-ui/core/Fade";
+import MyVehicles from "./submenus/myVehicles";
+import PaymentMethods from "./submenus/paymentMethods";
+import Armazenado from '../../services/redux/store/'
+import { Handle_Menu_Click } from "../../services/redux/actions/action_types";
 
-class Perfil extends Component {
-  Deslogar() {
-    localStorage.setItem("user_id", null);
-    localStorage.setItem("user_nome", null);
-    localStorage.setItem("user_email", null);
-    localStorage.setItem("logado", null);
-    window.location.href = "login";
-  }
+function Perfil() {
+  const estado = useSelector((state) => state);
+  const [slide, setSlide] = useState(true);
 
-  render() {
-    const { classes } = this.props;
-    const UserNome = localStorage.getItem("user_nome");
-    const UserId = localStorage.getItem("user_id");
 
-    return (
-      <React.Fragment>
-        <Topbar currentPath='/perfil' />
-        <CssBaseline />
-        <div className={classes.root}>
-          <List>
-            <ListItem>
-              <Grid container justify='center'>
-                <Grid
-                  spacing={10}
-                  alignItems='center'
-                  justify='center'
-                  container
-                  className={classes.grid}
-                >
-                  <Grid item xs={12}>
-                    <SectionHeader title={"Olá, " + UserNome} />
-                    {/* <CardItem /> */}
-                  </Grid>
-                </Grid>
-              </Grid>
-            </ListItem>
-            <ListItem>
-              <Grid container justify='center'>
-                <Grid
-                  spacing={10}
-                  alignItems='center'
-                  justify='center'
-                  container
-                  className={classes.grid}
-                >
-                  <Grid item xs={12}>
-                    <Button
-                      variant='text'
-                      color='warning'
-                      onClick={() => this.Deslogar()}
-                    >
-                      <Typography>Deslogar</Typography>
-                    </Button>
-                  </Grid>
-                </Grid>
-              </Grid>
-            </ListItem>
-          </List>
-        </div>
-      </React.Fragment>
-    );
-  }
+  const MenuTopic = ({children}) => {
+      return (
+        <>
+        {children}
+        <DialogActions>
+        <Divider/>
+        <Button onClick={()=> Armazenado.dispatch({type:Handle_Menu_Click, visao: 'inicial'})} variant='contained' color='primary'> Voltar </Button>
+        </DialogActions>
+        </>
+      )
+  } 
+
+  const Apresentar = (props) => {
+    let apresentar;
+
+    console.log(estado.clickState.visao);
+    switch (estado.clickState.visao) {
+      case "inicial":
+        apresentar = <AccountInfo />
+        break;
+      case "metodosDePagamento":
+        apresentar = (
+          <MenuTopic>
+          <PaymentMethods />
+          </MenuTopic>           
+        );
+        break;
+      case "meusVeiculos":
+       apresentar = (
+          <MenuTopic>
+          <MyVehicles/>
+          </MenuTopic>           
+        ); 
+        break;
+    }
+    return(
+       <Grow  in={true} mountOnEnter unmountOnExit {...props}>
+       <div>{apresentar}</div>
+       </Grow>);
+  };
+
+  return (
+    <React.Fragment>
+      <Topbar currentPath="/perfil" />
+      <CssBaseline />
+      <div
+        style={{
+          flexGrow: 1,
+          overflow: "hidden",
+          backgroundPosition: "0 400px",
+          marginTop: 20,
+          padding: 20,
+          paddingBottom: 200,
+        }}
+      >
+        <Grid container justify="center">
+          <Paper style={{ width: 600 }} elevation={3}>
+              <div style={{ maxWidth: 560 }}>
+                <Apresentar />
+              </div>
+          </Paper>
+        </Grid>
+      </div>
+    </React.Fragment>
+  );
 }
 
-export default withStyles(styles)(Perfil);
+export default Perfil;

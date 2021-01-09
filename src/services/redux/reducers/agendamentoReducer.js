@@ -1,4 +1,4 @@
-import { Handle_Get_Bookings } from "../actions/action_types";
+import { Handle_GET_Bookings } from "../actions/action_types";
 
 const initialState = {
   Agendamentos: [],
@@ -7,23 +7,11 @@ const initialState = {
 };
 
 export const agendamentoReducer = (state = initialState, action) => {
-  switch (action) {
-    case Handle_Get_Bookings:
-      const response = {
-        atualizadoEm: action.atualizadoEm,
-        criadoEm: action.criadoEm,
-        id: action.id,
-        id_oficina: action.id_oficina,
-        id_usuario: action.id_usuario,
-        id_veiculo: action.id_veiculo,
-        obs: action.obs,
-        prazo: action.prazo,
-        preco: action.preco,
-      };
-      console.log(response, "opa");
+  switch (action.type) {
+    case Handle_GET_Bookings: 
       return {
         ...state,
-        Agendamentos: response,
+        Agendamentos: action.Agendamentos,
         Quantidade: action.Quantidade,
         ShowNewAgendamento: !state.ShowNewAgendamento,
       };

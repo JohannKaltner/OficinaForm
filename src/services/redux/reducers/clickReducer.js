@@ -1,10 +1,13 @@
 import {
   Handle_User_Data,
   Handle_Select_Oficina,
+  Handle_Pagination,
+  Handle_Menu_Click,
   HANDLE_ACTION,
+
 } from "../actions/action_types";
 
-const initialState = {
+const INITIAL_STATE = {
   UserId: "",
   UserName: "",
   UserEmail: "",
@@ -15,10 +18,32 @@ const initialState = {
   ActionModal: true,
   Message: "",
   IsValidation: "",
+
+  //Pagination
+  Limit: 10,
+  Page: 1,
+  PageCount: 0,
+
+  //Perfil Handler
+  visao:'inicial'
+
+  
 };
 
-export const clickReducer = (state = initialState, action = {}) => {
-  switch (action) {
+export const clickReducer = (state = INITIAL_STATE, action) => {
+  switch (action.type) {
+    case Handle_Menu_Click:
+      return {
+        ...state,
+        visao: action.visao
+      }
+    case Handle_Pagination:
+      return{
+        ...state,
+        Limit: action.Limit,
+        Page: action.Page,
+        PageCount: Math.ceil(action.Quantidade/ 5 ),
+      }
     case Handle_User_Data:
       return {
         ...state,

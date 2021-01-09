@@ -15,6 +15,7 @@ import {
 import AnnouncementIcon from "@material-ui/icons/Announcement";
 import Loading from "../common/Loading";
 import { Link } from "react-router-dom";
+import { green } from "@material-ui/core/colors";
 
 const styles = (theme) => ({
   root: {
@@ -114,11 +115,10 @@ class CardItemNovo extends Component {
   };
   render() {
     const { classes } = this.props;
-    const { agendamento } = this.props;
-    console.log(agendamento);
+    const { agendamento } = this.props; 
     return (
       <div className={classes.root}>
-        <Paper className={classes.paper} style={{ position: "relative" }}>
+        <div className={classes.paper} style={{ position: "relative" }}>
           {/* <Loading loading={loading} /> */}
           <div>
             <Typography variant='subtitle1' gutterBottom></Typography>
@@ -126,9 +126,9 @@ class CardItemNovo extends Component {
               <AnnouncementIcon
                 style={{ fontSize: 72 }}
                 fontSize={"large"}
-                color={"secondary"}
+                // color={green[500]}
               />
-              <Typography variant='h5' color={"secondary"} gutterBottom>
+              <Typography variant='h5' gutterBottom>
                 Novo Agendamento
               </Typography>
             </div>
@@ -156,7 +156,7 @@ class CardItemNovo extends Component {
               </Button>
             </div>
           </div>
-        </Paper>
+        </div>
       </div>
     );
   }
