@@ -14,8 +14,9 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
-import { Avatar, Link as MaterialLink } from "@material-ui/core";
+import { Avatar, Link as MaterialLink } from "@material-ui/core"; 
 import { PrivateMenu, Menu } from "./Menu";
+import {BrowserView, MobileView} from 'react-device-detect';
 
 const logo = require("../images/NearGarage.png");
 const profile = require("../images/profile.png");
@@ -121,8 +122,9 @@ class Topbar extends Component {
     }
   };
 
-  render() {
-    const { classes } = this.props;
+  render() { 
+    const { classes } = this.props;  
+    
 
     return (
       <AppBar position="absolute" color="default" className={classes.appBar}>
@@ -131,6 +133,7 @@ class Topbar extends Component {
             <Grid item xs={12} className={classes.flex}>
               {/* {this.props.noTabs && ( */}
               <React.Fragment>
+              <MobileView>
                 <div className={classes.iconContainer}>
                   <IconButton
                     onClick={this.mobileMenuOpen}
@@ -141,18 +144,16 @@ class Topbar extends Component {
                     <MenuIcon />
                   </IconButton>
                 </div>
+                </MobileView>
                 <div className={classes.tabContainer}>
                   <SwipeableDrawer
-                    anchor="top"
+                    anchor="left"
                     open={this.state.menuDrawer}
                     onClose={this.mobileMenuClose}
                     onOpen={this.mobileMenuOpen}
                   >
                     <AppBar title="Menu" />
-
                     <List style={{ backgroundColor: "#2fae69" }}>
-                      
-                      
                       <ListItem style={{textAlign:'center'}}>
                        
                         {/* <IconButton
@@ -233,8 +234,7 @@ class Topbar extends Component {
                           </ListItem>
                     </List>
                   </SwipeableDrawer>
-
-                  {/* <Tabs
+                   <Tabs
                       value={this.current() || this.state.value}
                       indicatorColor='tertiary'
                       textColor='white'
@@ -281,7 +281,7 @@ class Topbar extends Component {
                         />
                       ))}
                       )
-                    </Tabs> */}
+                    </Tabs>  
                 </div>
                 <div className={classes.tabContainer}>
                   {/* <SwipeableDrawer

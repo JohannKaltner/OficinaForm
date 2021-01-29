@@ -11,6 +11,7 @@ import MyVehicles from "./submenus/myVehicles";
 import PaymentMethods from "./submenus/paymentMethods";
 import Armazenado from '../../services/redux/store/'
 import { Handle_Menu_Click } from "../../services/redux/actions/action_types";
+import History from "./submenus/history";
 
 function Perfil() {
   const estado = useSelector((state) => state);
@@ -37,6 +38,13 @@ function Perfil() {
       case "inicial":
         apresentar = <AccountInfo />
         break;
+       case "historicoDeAgendamentos":
+         apresentar = (
+           <MenuTopic>
+           <History />
+           </MenuTopic>           
+         );
+         break;
       case "metodosDePagamento":
         apresentar = (
           <MenuTopic>

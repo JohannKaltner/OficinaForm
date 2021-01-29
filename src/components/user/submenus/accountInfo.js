@@ -65,7 +65,7 @@ export default function AccountInfo() {
         onClick={() =>
           Armazenado.dispatch({
             type: Handle_Menu_Click,
-            visao: "historicoDePagamento",
+            visao: "historicoDeAgendamentos",
           })
         }
       >
